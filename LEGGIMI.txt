@@ -1,0 +1,9 @@
+Sistema Testaletto Integrato - sito scroll 3D (three.js)
+
+Aprire con un piccolo server locale (i moduli ES non funzionano da file://):
+  cd sito
+  python -m http.server 8000
+poi http://localhost:8000
+
+Oppure pubblicare la cartella su GitHub Pages / qualsiasi hosting statico.
+Debug: ?p=0.5 blocca l'avanzamento (0..1).

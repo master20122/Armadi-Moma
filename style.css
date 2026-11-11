@@ -1,0 +1,67 @@
+:root {
+  --bg: #fafaf8;
+  --ink: #111;
+  --mute: #8a8a86;
+  --red: #b5332f;
+  --moma: #962d33;
+  --f: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f); -webkit-font-smoothing: antialiased; }
+#c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+#spacer { height: 1100vh; }
+#labels, #hots { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+
+#top {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between;
+  padding: 18px 28px; font-size: 11px; letter-spacing: .22em; color: var(--mute); font-weight: 400;
+  pointer-events: none;
+}
+
+/* ---- pagina 0: titolo con logo MOMA ---- */
+#hero {
+  position: fixed; left: clamp(24px, 6vw, 96px); top: 50%; transform: translateY(-50%); z-index: 4; max-width: 640px;
+  pointer-events: none;
+}
+#logo { width: clamp(150px, 20vw, 250px); height: auto; display: block; margin-bottom: 38px; }
+#hero h1 { font-size: clamp(38px, 6vw, 84px); line-height: .98; margin: 0; font-weight: 800; letter-spacing: -.02em; }
+#hero p { font-size: clamp(16px, 1.7vw, 24px); font-weight: 300; color: #444; margin: 18px 0 0; }
+.scroll { margin-top: 44px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--mute); }
+.scroll i { font-style: normal; display: inline-block; animation: nudge 1.6s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateY(5px); } }
+
+/* ---- didascalia capitolo ---- */
+#caption {
+  position: fixed; left: clamp(24px, 6vw, 96px); bottom: 7vh; z-index: 4; display: flex; gap: 22px; align-items: flex-end;
+  transition: opacity .35s ease, transform .35s ease; pointer-events: none;
+}
+#caption.off { opacity: 0; transform: translateY(10px); }
+#caption b { font-weight: 300; font-size: clamp(44px, 7vw, 96px); line-height: .8; color: #c9c9c5; font-variant-numeric: tabular-nums; }
+#caption h2 { margin: 0; font-size: clamp(22px, 2.6vw, 38px); font-weight: 500; letter-spacing: -.01em; }
+#caption p { margin: 6px 0 0; font-size: clamp(13px, 1.2vw, 17px); font-weight: 300; color: #555; }
+
+#ticks { position: fixed; right: 26px; top: 50%; transform: translateY(-50%); z-index: 5; display: flex; flex-direction: column; gap: 10px; }
+#ticks i { display: block; width: 14px; height: 2px; background: #cfcfca; transition: all .3s; }
+#ticks i.on { width: 30px; background: var(--ink); }
+#ticks i.done { background: #8a8a86; }
+
+/* ---- etichette 3D ---- */
+.lbl {
+  position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--red); font-weight: 400; text-align: center; line-height: 1.35; opacity: 0; will-change: transform;
+}
+.lbl.gray { color: #777; font-size: 10.5px; }
+.lbl.big { font-size: 64px; color: #222; letter-spacing: 0; font-weight: 300; }
+
+#hint, #tagline {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 4; opacity: 0; transition: opacity .5s;
+  font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #555; pointer-events: none; text-align: center; padding: 0 20px;
+}
+#hint { bottom: 22px; }
+#tagline { top: 72px; font-size: clamp(14px, 1.6vw, 20px); letter-spacing: .02em; text-transform: none; color: #222; font-weight: 300; }
+
+.hot { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; opacity: 0; will-change: transform; }
+.hot i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--red); background: #fff; flex: none; }
+.hot span { font-size: 12px; letter-spacing: .06em; background: rgba(255,255,255,.92); border: 1px solid #ddd; padding: 5px 9px; white-space: nowrap; }
+
+#nogl { display: none; position: fixed; inset: 0; place-items: center; z-index: 10; background: var(--bg); font-size: 18px; }

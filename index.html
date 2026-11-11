@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema Testaletto Integrato · MOMA</title>
+<meta name="description" content="Dal passo strutturale alla camera di degenza a 2 posti letto: il portale testaletto integrato, passo dopo passo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="labels"></div>
+
+<header id="top">
+  <span>ARMADI · SISTEMA TESTALETTO INTEGRATO</span>
+  <span id="pct">00</span>
+</header>
+
+<section id="hero">
+  <img id="logo" src="assets/moma-logo.png" alt="MOMA — Design for health">
+  <h1>Sistema Testaletto<br>Integrato</h1>
+  <p>Camera di degenza a 2 posti letto</p>
+  <div class="scroll">Scorri <i>↓</i></div>
+</section>
+
+<div id="caption">
+  <b id="cNum">01</b>
+  <div><h2 id="cTitle"></h2><p id="cSub"></p></div>
+</div>
+
+<nav id="ticks" aria-label="Capitoli"></nav>
+<div id="hint">Muovi il mouse per guardarti intorno</div>
+<div id="tagline">Efficace e corretto, senza voli pindarici.</div>
+<div id="hots"></div>
+<div id="nogl">Questo sito richiede WebGL.</div>
+
+<div id="spacer"></div>
+<script type="module" src="main.js"></script>
+</body>
+</html>
