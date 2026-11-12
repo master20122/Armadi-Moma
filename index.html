@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }
 </script>
 </head>
 <body>
@@ -38,6 +38,12 @@
 <div id="hint">Muovi il mouse per guardarti intorno</div>
 <div id="tagline">Efficace e corretto, senza voli pindarici.</div>
 <div id="hots"></div>
+<div id="zoom" aria-hidden="true"><button id="zx" aria-label="Chiudi">×</button><img id="zImg" alt=""></div>
+<div id="info" aria-hidden="true"><div id="card" role="dialog" aria-modal="true">
+  <button id="x" aria-label="Chiudi">&times;</button>
+  <figure id="fig"><img id="iImg" alt=""><div id="iNo">Foto reale in arrivo</div></figure>
+  <div id="iTxt"><small id="iK">Foto reale</small><h2 id="iT"></h2><p id="iP"></p><dl id="iD"></dl><a id="iL" target="_blank" rel="noopener">Scheda prodotto &nearr;</a></div>
+</div></div>
 <div id="nogl">Questo sito richiede WebGL.</div>
 
 <div id="spacer"></div>

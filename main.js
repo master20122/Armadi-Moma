@@ -1,4 +1,4 @@
-import { THREE, clamp, lerp, win, ease } from './core.js';
+import { THREE, clamp, lerp, win, ease, easeOut } from './core.js';
 import { buildScene } from './scene.js';
 
 const $ = id => document.getElementById(id);
@@ -12,7 +12,7 @@ try {
 }
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
-const { scene, update, labels: LDEF, hot: HDEF } = buildScene();
+const { scene, update, labels: LDEF, hot: HDEF } = buildScene(renderer);
 const camera = new THREE.PerspectiveCamera(9, 1, 0.5, 300);
 const V = a => new THREE.Vector3(...a);
 
@@ -56,9 +56,38 @@ const HT = HDEF.map(d => {
   const el = document.createElement('div');
   el.className = 'hot';
   el.innerHTML = `<i></i><span>${d.t}</span>`;
+  el.addEventListener('click', () => openInfo(d.k));
   hotsEl.appendChild(el);
   return { el, a: V(d.a) };
 });
+
+// ---- schede con foto reale (clic sulle etichette)
+const FAV = 'https://www.favero.it/it/prodotti/';
+const INFO = {
+  armadio: { t: 'Armadio di degenza', img: 'assets/armadio.jpg', p: 'Armadio con ante blu laccate, mostrato chiuso, aperto con i ripiani interni e di lato. Si aggancia ai montanti del portale e ne segue il filo superiore.', d: [['Ingombro', '0,58 × 0,70 m'], ['Altezza', '2,03 m']] },
+  comodino: { t: 'Comodino', img: 'assets/comodino.jpg', p: 'Comodino della serie Rotomoulding: cassetto, anta e piano d\'appoggio a ponte, su ruote. Nel progetto sta accanto all\'armadio, con il lato blu rivolto verso la camera.', d: [['Ingombro', '0,74 × 0,49 m'], ['Piano', 'h 0,77 m']], link: FAV + 'degenza/comodini/rotomoulding' },
+  letto: { t: 'Letto di degenza', img: 'assets/letto.jpg', p: 'Letto specialistico con pesatura Ingenious HighCare Precision (9LI70LTS), con sponde laterali e comandi integrati. Testata rivolta verso il portale.', d: [['Ingombro', '2,20 × 0,93 m']], link: FAV + 'letti-specialistici/letti-con-pesatura-1/ingenious-highcare-precision-9li70lts' },
+  portale: { t: 'Portale testaletto', img: 'assets/portale.jpg', k: 'Render', p: 'Due montanti e una trave in un unico elemento: porta i gas medicali nei montanti e la luce indiretta sotto la trave. Gli armadi si agganciano ai montanti.', d: [['Larghezza', '5,60 m'], ['Sotto trave', '2,03 m'], ['Altezza', '2,48 m']] },
+  colonna: { t: 'Colonna centrale', img: 'assets/colonna.jpg', p: 'Colonna con due ante al centro del portale, tra i due posti letto; completa il sistema con i gas medicali sul lato.', d: [['Larghezza', '0,90 m'], ['Altezza', '2,03 m']] },
+};
+const $i = id => document.getElementById(id);
+function openInfo(key) {
+  const f = INFO[key]; if (!f) return;
+  $i('iT').textContent = f.t; $i('iP').textContent = f.p; $i('iK').textContent = f.k || 'Foto reale';
+  $i('iD').innerHTML = f.d.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('');
+  const L = $i('iL'); if (f.link) { L.href = f.link; L.style.display = ''; } else L.style.display = 'none';
+  const fig = $i('fig'), img = $i('iImg'); fig.classList.remove('empty');
+  img.onerror = () => fig.classList.add('empty'); img.alt = f.t; img.src = f.img;
+  $i('info').classList.add('on'); $i('info').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
+}
+function closeInfo() { $i('info').classList.remove('on'); $i('info').setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+$i('x').addEventListener('click', closeInfo);
+$i('info').addEventListener('click', e => { if (e.target === $i('info')) closeInfo(); });
+function openZoom() { const s = $i('iImg').src; if (!s || $i('fig').classList.contains('empty')) return; $i('zImg').src = s; $i('zoom').classList.add('on'); $i('zoom').setAttribute('aria-hidden', 'false'); }
+function closeZoom() { $i('zoom').classList.remove('on'); $i('zoom').setAttribute('aria-hidden', 'true'); }
+$i('iImg').addEventListener('click', openZoom);
+$i('zoom').addEventListener('click', closeZoom);
+addEventListener('keydown', e => { if (e.key !== 'Escape') return; if ($i('zoom').classList.contains('on')) closeZoom(); else closeInfo(); });
 
 // ---- camera: chiavi (iso con lente lunga, poi lente che si apre e si entra in camera)
 const DIR = new THREE.Vector3(1, 0.78, 1).normalize();
@@ -69,9 +98,9 @@ const KEYS = [
   { p: 0.16, ...iso([0, 0.4, 0], 13.5, 9) },
   { p: 0.3, ...iso([-0.7, 0.8, -2.0], 11.2, 9) },
   { p: 0.5, ...ISO_B },
-  { p: 0.84, ...ISO_B },
-  { p: 0.9, pos: [4.7, 4.4, 7.8], look: [-0.9, 1.2, -2.45], fov: 30 },
-  { p: 0.95, pos: [-0.9, 1.7, 4.6], look: [-0.9, 1.4, -3.5], fov: 50 },
+  { p: 0.9, ...ISO_B },
+  { p: 0.94, pos: [4.7, 4.4, 7.8], look: [-0.9, 1.2, -2.45], fov: 30 },
+  { p: 0.97, pos: [-0.9, 1.7, 4.6], look: [-0.9, 1.4, -3.5], fov: 50 },
   { p: 1.0, pos: [-0.9, 1.6, 1.15], look: [-0.9, 1.45, -3.5], fov: 62 },
 ];
 function resolve(k, aspect) {
@@ -104,7 +133,7 @@ function resize() {
 }
 addEventListener('resize', resize); resize();
 
-let p = 0;
+let p = 0, qs = 0;
 const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
 function project(v, out) {
   out.copy(v).project(camera);
@@ -112,15 +141,18 @@ function project(v, out) {
 }
 function frame() {
   const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
-  const target = fixed != null ? fixed : clamp(scrollY / max);
+  const raw = fixed != null ? fixed : clamp(scrollY / max);
+  const target = raw < 0.62 ? raw / 0.62 * 0.9 : raw < 0.68 ? 0.9 : 0.9 + clamp((raw - 0.68) / 0.27) * 0.1;
+  qs += (win(raw, 0.63, 0.655) - qs) * (fixed != null ? 1 : 0.09);
+  const q = qs;
   p += (target - p) * (fixed != null ? 1 : 0.09);
   if (Math.abs(target - p) < 0.0002) p = target;
 
-  update(p);
+  update(p, q);
   const c = camAt(p, W / Hh);
   // sguardo libero durante la camminata
   mouse.sx += (mouse.x - mouse.sx) * 0.06; mouse.sy += (mouse.y - mouse.sy) * 0.06;
-  const wlk = win(p, 0.93, 0.97);
+  const wlk = win(p, 0.97, 0.995);
   if (wlk > 0) {
     const f = tmp2.copy(c.look).sub(c.pos);
     f.applyAxisAngle(new THREE.Vector3(0, 1, 0), -mouse.sx * 0.55 * wlk);
@@ -140,9 +172,10 @@ function frame() {
   let ch = -1;
   CH.forEach((k, i) => { if (p >= k.a) ch = i; });
   setChapter(ch);
-  $('caption').style.visibility = p > 0.95 ? 'hidden' : 'visible';
-  $('hint').style.opacity = String(win(p, 0.94, 0.97));
-  $('tagline').style.opacity = String(win(p, 0.93, 0.97));
+  $('caption').style.visibility = p > 0.96 ? 'hidden' : 'visible';
+  $('hint').style.opacity = String(win(p, 0.97, 0.99));
+  $('tagline').style.opacity = String(win(p, 0.97, 0.99));
+
 
   for (const L of LB) {
     const [a0, a1, b0, b1] = L.d.vis;
@@ -159,9 +192,10 @@ function frame() {
     }
     L.el.style.transform = `translate(${s.x}px,${s.y}px) translate(-50%,-50%) rotate(${ang}rad)`;
   }
-  const ho = win(p, 0.96, 0.99);
+  const ho = win(p, 0.985, 1.0);
   for (const H of HT) {
     H.el.style.opacity = String(ho);
+    H.el.style.pointerEvents = ho > 0.6 ? 'auto' : 'none';
     if (ho < 0.01) continue;
     const s = project(H.a, tmp);
     if (s.z > 1) { H.el.style.opacity = '0'; continue; }

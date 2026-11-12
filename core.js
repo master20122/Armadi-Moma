@@ -22,6 +22,7 @@ export const TONES = {
   purple: ['#8d8fc8', '#5e61a8', '#4b4e91'],
   bed:    ['#c3cdec', '#a3b3df', '#8c9ed4'],
   wall:   ['#f7f7f5', '#e8e8e6', '#d3d3d1'],
+  steel:  ['#b9b9b6', '#a2a29f', '#8a8a87'],
 };
 
 export class Part {
